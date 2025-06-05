@@ -1,0 +1,29 @@
+version: '3'
+services:
+  db:
+    image: postgres:14
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: construction_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./dbdata:/var/lib/postgresql/data
+  backend:
+    build: ./backend
+    environment:
+      DB_HOST: db
+      DB_USER: postgres
+      DB_PASS: postgres
+      DB_NAME: construction_db
+    ports:
+      - "4000:4000"
+    depends_on:
+      - db
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
